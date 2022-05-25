@@ -9,7 +9,7 @@
 <body>
 <form action="${pageContext.request.contextPath}/webmarket/login" method="post">
 <input type="text" name="id">
-<input type="text" name="pw">
+<input type="text" name="password">
 <button>확인</button>
 </form>
 </body>

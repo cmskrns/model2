@@ -11,10 +11,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
+import dao.MemberDao;
 import dao.ProductRepository;
 import dto.Product;
 
@@ -96,10 +98,24 @@ public class WebMarket extends HttpServlet {
 			dao.insert(product);
 			response.sendRedirect("findAll");
 		}else if (cmdURI.equals("/login")) {
-			String id = request.getParameter("id");
+			
+			String userId = request.getParameter("id");
 			String pw = request.getParameter("password");
-			System.out.println(id);
+			System.out.println(userId);
 			System.out.println(pw);
+			MemberDao mdao = new MemberDao();
+			String name = mdao.loginCheck(userId, pw);
+			if (name != null) {
+				HttpSession session = request.getSession();
+				session.setAttribute("userid",userId);
+				session.setAttribute("password",pw);
+				response.sendRedirect("findAll");
+			} else {
+				
+				System.out.println("로그인 실패");
+				response.sendRedirect("login");
+			}
+			
 		}
 		else {
 			System.out.println("잘못된 요청입니다");
